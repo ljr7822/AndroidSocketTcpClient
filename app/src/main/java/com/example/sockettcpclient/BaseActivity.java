@@ -2,6 +2,7 @@ package com.example.sockettcpclient;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +48,26 @@ public class BaseActivity extends AppCompatActivity {
         mIvSetting.setVisibility(isShowSetting ? View.VISIBLE : View.GONE);
 
     }
+
+    /**
+     * 读取ip
+     */
+    public String readIp(){
+        SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+        String title = preferences.getString("ip","192.168.43.174");
+        return title;
+    }
+
+    /**
+     * 读取端口
+     */
+    public int readPort(){
+        SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+        int title = preferences.getInt("port",8080);
+        return title;
+    }
+
+
 
     /**
      * 状态栏颜色

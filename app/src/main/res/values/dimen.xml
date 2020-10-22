@@ -9,5 +9,6 @@
     <dimen name="titleSize">16dp</dimen>
     <dimen name="itemFontSize">15dp</dimen>
     <dimen name="iconImgSize">48dp</dimen>
-    <dimen name="marginBottom">10dp</dimen>
+    <dimen name="marginBottom">1dp</dimen>
+    <dimen name="smallTitleSize">10dp</dimen>
 </resources>

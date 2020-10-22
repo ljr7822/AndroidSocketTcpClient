@@ -136,6 +136,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:hint="@string/configurationPort"
+            android:inputType="number"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:background="@drawable/edi_shap"
@@ -167,6 +168,7 @@
             android:layout_marginBottom="16dp"
             android:hint="@string/configurationIp"
             android:textSize="18dp"
+            android:inputType="phone"
             android:textColor="@color/black"
             android:background="@drawable/edi_shap"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -192,13 +194,14 @@
 
         <Button
             android:id="@+id/set_default"
-            android:layout_width="0dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/setbut_bac"
             android:text="恢复默认设置"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/set_end"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -211,7 +214,7 @@
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/set_default"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.7"
             app:layout_constraintStart_toEndOf="@+id/set_default"
             app:layout_constraintTop_toTopOf="@+id/set_default" />
 

@@ -37,6 +37,7 @@ public class setActivity extends BaseActivity {
         }
         init();
         back();
+        read();
 
         // 点击修改配置
         mSetStart.setOnClickListener(new View.OnClickListener() {

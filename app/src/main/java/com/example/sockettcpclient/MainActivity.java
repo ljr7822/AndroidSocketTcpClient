@@ -1,8 +1,10 @@
 package com.example.sockettcpclient;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,7 +44,7 @@ import java.util.Scanner;
 public class MainActivity extends BaseActivity {
 
     private Switch mSwitch;
-    private Prompt mPrompt;
+    private Prompt mPrompt = new Prompt();
     private ActivityMainBinding mBinding;
     List<Msg> msgList = new ArrayList<>();
     MsgAdapter adapter;
@@ -50,6 +52,7 @@ public class MainActivity extends BaseActivity {
     public static boolean connectState = false;
     private ImageView mIvSetting;
     private ImageView mIvBack;
+    private String port;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +60,15 @@ public class MainActivity extends BaseActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
+        port = String.valueOf(readPort());
         // 初始化标题导航栏
-        initNavBar(false,"192.168.43.174","8080",true);
+        initNavBar(false,readIp(),port,true);
         // 状态栏颜色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setWindow(getWindow());
         }
 
+        // 适配器配置
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mBinding.msgRecyclerView.setLayoutManager(layoutManager);
         adapter = new MsgAdapter(msgList);
@@ -72,15 +77,16 @@ public class MainActivity extends BaseActivity {
         // 设置页面跳转
         setting(MainActivity.this);
 
-
+        // 消息发送按钮点击事件
         mBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String content = mBinding.inputText.getText().toString();
                 if ("".equals(content)){
                     // TODO
+                    mPrompt.setToast(MainActivity.this,"请输入内容!");
                 }else {
-                    Msg msg = new Msg(content,0);
+                    Msg msg = new Msg(content,1);
                     msgList.add(msg);
                     adapter.notifyItemChanged(msgList.size()-1);//当有新消息时，刷新ListView中的显示
                     mBinding.msgRecyclerView.scrollToPosition(msgList.size()-1);//将ListView定位到最后一行
@@ -90,4 +96,5 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
 }
