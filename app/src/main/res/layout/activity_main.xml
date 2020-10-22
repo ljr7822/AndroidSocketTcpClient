@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -17,40 +18,46 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <EditText
             android:id="@+id/input_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/edi_shap"
             android:hint="@string/inputHint"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send_file"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/send_file"
             android:layout_width="68dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="5dp"
             android:background="@drawable/setbut_bac"
             android:text="@string/send_file"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="@+id/input_text"
+            app:layout_constraintEnd_toStartOf="@+id/send"
+            app:layout_constraintTop_toTopOf="@+id/input_text" />
 
         <Button
             android:id="@+id/send"
             android:layout_width="68dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
             android:background="@drawable/setbut_bac"
             android:text="@string/send"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="@+id/send_file"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/send_file" />
         <!-- textAllCaps="false"表示关掉文本字母全部大写方法 -->
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -135,9 +135,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:hint="8080"
+            android:hint="@string/configurationPort"
             android:textColor="@color/black"
             android:textSize="18sp"
+            android:background="@drawable/edi_shap"
             app:layout_constraintBottom_toTopOf="@+id/ip_set"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toTopOf="parent"
@@ -164,9 +165,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="16dp"
-            android:hint="192.168.127.0"
+            android:hint="@string/configurationIp"
             android:textSize="18dp"
             android:textColor="@color/black"
+            android:background="@drawable/edi_shap"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView2" />
 

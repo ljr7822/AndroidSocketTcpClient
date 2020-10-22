@@ -9,10 +9,10 @@
         android:color="#00020202"/>
 
     <padding
-        android:bottom="2dp"
+        android:bottom="5dp"
         android:left="3dp"
         android:right="3dp"
-        android:top="2dp"/>
+        android:top="5dp"/>
 
     <corners android:radius="2dp"/>
 

@@ -6,5 +6,6 @@
     <string name="configuration">修改配置</string>
     <string name="sey_switch">切换通讯模式</string>
     <string name="inputHint">输入要发送的内容</string>
-
+    <string name="configurationIp">例如:192.169.1.133</string>
+    <string name="configurationPort">例如:8080</string>
 </resources>
