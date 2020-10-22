@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="navBarHeight">48dp</dimen>
+    <dimen name="marginSize">10dp</dimen>
+    <dimen name="backImgSize">24dp</dimen>
+    <dimen name="navBarTitleSize">16dp</dimen>
+    <dimen name="btnHeight">16dp</dimen>
+    <dimen name="titleSize">16dp</dimen>
+    <dimen name="itemFontSize">15dp</dimen>
+    <dimen name="iconImgSize">48dp</dimen>
+    <dimen name="marginBottom">10dp</dimen>
+</resources>
