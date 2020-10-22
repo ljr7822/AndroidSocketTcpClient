@@ -1,4 +1,4 @@
-package com.example.sockettcpclient;
+package com.example.sockettcpclient.activitys;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.IdRes;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.sockettcpclient.R;
 
 /**
  * author : Iwen大大怪
@@ -47,6 +49,17 @@ public class BaseActivity extends AppCompatActivity {
         mTvPort.setText(port);
         mIvSetting.setVisibility(isShowSetting ? View.VISIBLE : View.GONE);
 
+    }
+
+    /**
+     * 去掉Activity上面的状态栏
+     * 注意：设置全屏的俩段代码必须在setContentView(R.layout.main) 之前，不然会报错。
+     * @param isNoState 是否去掉
+     */
+    protected void isNoState(boolean isNoState){
+        if (isNoState){
+            getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
+        }
     }
 
     /**
@@ -89,7 +102,7 @@ public class BaseActivity extends AppCompatActivity {
         mIvSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context ,setActivity.class);
+                Intent intent = new Intent(context , setActivity.class);
                 startActivity(intent);
                 Log.e("点击事件","设置");
             }

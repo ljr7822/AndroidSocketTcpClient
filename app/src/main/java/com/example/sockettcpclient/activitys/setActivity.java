@@ -1,4 +1,4 @@
-package com.example.sockettcpclient;
+package com.example.sockettcpclient.activitys;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.sockettcpclient.R;
 import com.example.sockettcpclient.utils.Prompt;
 
 /**

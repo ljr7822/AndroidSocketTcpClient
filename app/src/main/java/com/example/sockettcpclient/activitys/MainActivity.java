@@ -1,45 +1,24 @@
-package com.example.sockettcpclient;
+package com.example.sockettcpclient.activitys;
 
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.sockettcpclient.adapter.Msg;
 import com.example.sockettcpclient.adapter.MsgAdapter;
 import com.example.sockettcpclient.databinding.ActivityMainBinding;
+import com.example.sockettcpclient.tcpclient.TcpClient;
 import com.example.sockettcpclient.utils.Prompt;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 public class MainActivity extends BaseActivity {
 
@@ -52,7 +31,8 @@ public class MainActivity extends BaseActivity {
     public static boolean connectState = false;
     private ImageView mIvSetting;
     private ImageView mIvBack;
-    private String port;
+    private String mPort;
+    private String mIp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +40,10 @@ public class MainActivity extends BaseActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        port = String.valueOf(readPort());
+        mPort = String.valueOf(readPort());
+        mIp = readIp();
         // 初始化标题导航栏
-        initNavBar(false,readIp(),port,true);
+        initNavBar(false,mIp,mPort,true);
         // 状态栏颜色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setWindow(getWindow());
@@ -77,21 +58,23 @@ public class MainActivity extends BaseActivity {
         // 设置页面跳转
         setting(MainActivity.this);
 
+
         // 消息发送按钮点击事件
         mBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String content = mBinding.inputText.getText().toString();
                 if ("".equals(content)){
-                    // TODO
                     mPrompt.setToast(MainActivity.this,"请输入内容!");
                 }else {
-                    Msg msg = new Msg(content,1);
+                    Msg msg = new Msg(content,1,mIp);
                     msgList.add(msg);
                     adapter.notifyItemChanged(msgList.size()-1);//当有新消息时，刷新ListView中的显示
                     mBinding.msgRecyclerView.scrollToPosition(msgList.size()-1);//将ListView定位到最后一行
                     Log.d("发送--->",msg.getContent());
                     mBinding.inputText.setText("");
+                    TcpClient tcpClient = new TcpClient();
+                    tcpClient.createSock("192.168.43.174",9999);
                 }
             }
         });
