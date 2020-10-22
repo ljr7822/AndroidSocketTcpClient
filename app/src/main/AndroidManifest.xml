@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activitys.MainActivity"></activity>
-        <activity android:name=".activitys.setActivity" />
+        <activity android:name=".activitys.SetActivity" />
     </application>
 
 </manifest>

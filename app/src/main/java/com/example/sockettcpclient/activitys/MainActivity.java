@@ -27,7 +27,7 @@ public class MainActivity extends BaseActivity {
     private ActivityMainBinding mBinding;
     List<Msg> msgList = new ArrayList<>();
     MsgAdapter adapter;
-    Socket socket = null;
+    private Socket socket = null;
     public static boolean connectState = false;
     private ImageView mIvSetting;
     private ImageView mIvBack;
@@ -40,10 +40,10 @@ public class MainActivity extends BaseActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        mPort = String.valueOf(readPort());
+        mPort = readPort();
         mIp = readIp();
         // 初始化标题导航栏
-        initNavBar(false,mIp,mPort,true);
+        initNavBar(false,mIp+":"+mPort,">连接中<",true);
         // 状态栏颜色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setWindow(getWindow());
@@ -58,6 +58,21 @@ public class MainActivity extends BaseActivity {
         // 设置页面跳转
         setting(MainActivity.this);
 
+        final TcpClient tcpClient = new TcpClient();
+
+        // 判断是否有socket存在，没有就建立连接
+        if (socket==null||socket.isClosed()||!socket.isConnected()){
+            readIp(); // 获取ip
+            readPort(); // 获取端口号
+            tcpClient.createSock(readIp(),Integer.parseInt(readPort()));
+            // 更新标题导航栏
+            initNavBar(false,mIp+":"+mPort,">在线<",true);
+            Log.e("连接状态", "********************连接成功********************");
+        }else {
+            // 更新标题导航栏
+            initNavBar(false,mIp+":"+mPort,">离线<",true);
+            Log.e("连接状态", "********************连接失败********************");
+        }
 
         // 消息发送按钮点击事件
         mBinding.send.setOnClickListener(new View.OnClickListener() {
@@ -67,14 +82,13 @@ public class MainActivity extends BaseActivity {
                 if ("".equals(content)){
                     mPrompt.setToast(MainActivity.this,"请输入内容!");
                 }else {
+                    tcpClient.sendMsg(content);
                     Msg msg = new Msg(content,1,mIp);
                     msgList.add(msg);
-                    adapter.notifyItemChanged(msgList.size()-1);//当有新消息时，刷新ListView中的显示
-                    mBinding.msgRecyclerView.scrollToPosition(msgList.size()-1);//将ListView定位到最后一行
-                    Log.d("发送--->",msg.getContent());
+                    adapter.notifyItemChanged(msgList.size()-1);// 当有新消息时，刷新ListView中的显示
+                    mBinding.msgRecyclerView.scrollToPosition(msgList.size()-1);// 将ListView定位到最后一行
+                    Log.e("发送--->",msg.getContent());
                     mBinding.inputText.setText("");
-                    TcpClient tcpClient = new TcpClient();
-                    tcpClient.createSock("192.168.43.174",9999);
                 }
             }
         });

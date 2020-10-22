@@ -17,9 +17,9 @@ import com.example.sockettcpclient.utils.Prompt;
  * author : Iwen大大怪
  * date   : 2020/10/2118:31
  */
-public class setActivity extends BaseActivity {
+public class SetActivity extends BaseActivity {
     String ip;
-    int port;
+    String port;
     TextView ipshow;
     TextView portshow;
     EditText ipset;
@@ -50,7 +50,7 @@ public class setActivity extends BaseActivity {
                 editor.putInt("port", Integer.parseInt(portset.getText().toString()));
                 editor.apply();
                 read();
-                mPrompt.setToast(setActivity.this, "修改成功");
+                mPrompt.setToast(SetActivity.this, "修改成功");
             }
         });
 
@@ -60,11 +60,11 @@ public class setActivity extends BaseActivity {
             public void onClick(View v) {
                 // 恢复一个默认的数据写入手机
                 SharedPreferences.Editor editor = getSharedPreferences("data", Context.MODE_PRIVATE).edit();
-                editor.putInt("port", 8080);
+                editor.putString("port", "8080");
                 editor.putString("ip", "192.168.43.174");
                 editor.apply();
                 read();
-                mPrompt.setToast(setActivity.this, "恢复成功");
+                mPrompt.setToast(SetActivity.this, "恢复成功");
             }
         });
     }
@@ -75,7 +75,7 @@ public class setActivity extends BaseActivity {
     public void read() {
         SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
         ip = preferences.getString("ip", "192.168.43.174");
-        port = preferences.getInt("port", 8080);
+        port = preferences.getString("port", "8080");
         ipshow.setText("当前指定服务器IP:" + ip);
         portshow.setText("当前指定服务器PORT:" + port);
         ipset.setText(ip);

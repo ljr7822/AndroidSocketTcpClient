@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -74,12 +75,11 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 读取端口
      */
-    public int readPort(){
+    public String readPort(){
         SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
-        int title = preferences.getInt("port",8080);
+        String title = preferences.getString("port","8080");
         return title;
     }
-
 
 
     /**
@@ -96,13 +96,14 @@ public class BaseActivity extends AppCompatActivity {
         window.setStatusBarColor(getResources().getColor(R.color.qqgreen));
     }
     /**
-     * 设置按钮
+     * 设置按钮跳转
+     * @param context 上下文
      */
     protected void setting(final Context context){
         mIvSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context , setActivity.class);
+                Intent intent = new Intent(context , SetActivity.class);
                 startActivity(intent);
                 Log.e("点击事件","设置");
             }
