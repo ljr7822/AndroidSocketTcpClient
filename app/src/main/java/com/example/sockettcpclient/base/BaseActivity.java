@@ -1,4 +1,4 @@
-package com.example.sockettcpclient.activitys;
+package com.example.sockettcpclient.base;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,15 +8,21 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sockettcpclient.R;
+import com.example.sockettcpclient.activitys.SetActivity;
+import com.example.sockettcpclient.dao.InputDao;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 
 /**
  * author : Iwen大大怪
@@ -28,7 +34,6 @@ public class BaseActivity extends AppCompatActivity {
     private TextView mTvTitle;
     private ImageView mIvSetting;
     private TextView mTvPort;
-
 
     /**
      * 初始化NavigationBar
@@ -44,12 +49,10 @@ public class BaseActivity extends AppCompatActivity {
         mIvSetting = fd(R.id.iv_setting);
         mTvPort = fd(R.id.tv_port);
 
-
         mIvBack.setVisibility(isShowBack ? View.VISIBLE : View.GONE);
         mTvTitle.setText(title);
         mTvPort.setText(port);
         mIvSetting.setVisibility(isShowSetting ? View.VISIBLE : View.GONE);
-
     }
 
     /**
@@ -68,30 +71,81 @@ public class BaseActivity extends AppCompatActivity {
      */
     public String readIp(){
         SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
-        String title = preferences.getString("ip","192.168.43.174");
-        return title;
+        String mIp = preferences.getString("ip","192.168.43.174");
+        return mIp;
     }
 
     /**
      * 读取端口
      */
-    public String readPort(){
+    protected String readPort(){
         SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
-        String title = preferences.getString("port","8080");
-        return title;
+        String mPort = preferences.getString("port","8080");
+        return mPort;
+    }
+
+    /**
+     * 获取用户名
+     */
+    protected String readUserName(){
+        SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+        String mUserName = preferences.getString("username","8080");
+        return mUserName;
+    }
+
+    /**
+     * 将对象写入手机内存
+     *
+     * @param object 对象
+     */
+    protected void WriteObjInSp(String object) {
+        // 将配置写入手机中
+        JsonObject jsonObject = new JsonParser().parse(object).getAsJsonObject();
+        SharedPreferences.Editor editor = getSharedPreferences("data", Context.MODE_PRIVATE).edit();
+        editor.putString("type", jsonObject.get("type").getAsString());
+        editor.putString("ip", jsonObject.get("ip").getAsString());
+        editor.putString("port",jsonObject.get("port").getAsString());
+        editor.putString("username", jsonObject.get("username").getAsString());
+        editor.putString("msg",jsonObject.get("msg").getAsString());
+        editor.apply();
+    }
+
+    /**
+     * 将输入的参数封装成对象
+     *
+     * @param type 通讯类型
+     * @param ip   ip地址
+     * @param port 端口号
+     * @return 封装后的对象
+     */
+    public String ChangJson(Integer type, String ip, String port, String username, String msg) {
+        Gson gson = new Gson();
+        InputDao inputDao = new InputDao(type, ip, port, username, msg);
+        String inputJson = gson.toJson(inputDao);
+        return inputJson;
+    }
+
+    /**
+     * json数据反序列化
+     * @param accMsg 接收的消息
+     * @return 返回的对象
+     */
+    public InputDao FromJson(String accMsg){
+        InputDao mFronJson = new Gson().fromJson(accMsg, InputDao.class);
+        return mFronJson;
     }
 
 
     /**
-     * 状态栏颜色
+     * 状态栏透明
      * @param window
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setWindow(Window window) {
         window = getWindow();
-        //After LOLLIPOP not translucent status bar
+        // After LOLLIPOP not translucent status bar
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //Then call setStatusBarColor.
+        // Then call setStatusBarColor.
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(getResources().getColor(R.color.qqgreen));
     }
@@ -99,13 +153,13 @@ public class BaseActivity extends AppCompatActivity {
      * 设置按钮跳转
      * @param context 上下文
      */
-    protected void setting(final Context context){
+    protected void toSetting(final Context context){
         mIvSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context , SetActivity.class);
                 startActivity(intent);
-                Log.e("点击事件","设置");
+                Log.d("ljr","这是点击事件--->设置按钮被点击了");
             }
         });
     }
@@ -118,7 +172,7 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish(); // 模拟返回事件（关键）
-                Log.e("点击事件","返回");
+                Log.d("ljr","这是点击事件--->返回按钮被点击了");
             }
         });
     }

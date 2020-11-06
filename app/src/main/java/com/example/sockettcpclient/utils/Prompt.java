@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
  */
 public class Prompt {
     private Context mContext;
-    private String mtext;
+    private String mText;
 
     // 封装一个提示方法
     public void setToast(Context context, String text){
@@ -21,7 +21,12 @@ public class Prompt {
     }
 
     // 封装一个弹出提示方法
-    public void setDialog(Context context, final String title, String Message, String PositiveButtonText, String NegativeButtonText, DialogInterface.OnClickListener isListener, DialogInterface.OnClickListener noListener){
+    public void setDialog(
+            Context context, final String title,
+            String Message, String PositiveButtonText,
+            String NegativeButtonText,
+            DialogInterface.OnClickListener isListener,
+            DialogInterface.OnClickListener noListener){
         AlertDialog.Builder builder  = new AlertDialog.Builder(context);
         builder.setTitle(title) ;
         builder.setMessage(Message) ;

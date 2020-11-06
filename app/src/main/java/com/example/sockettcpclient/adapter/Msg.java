@@ -17,13 +17,24 @@ public class Msg {
     private String content;
     private int type;
     private String ip;
+    private String mUserName;
 
-    public Msg(String content,int type,String ip){
+    public Msg(String content,int type,String ip,String username){
         this.content = content;
         this.type = type;
         this.ip = ip;
+        this.mUserName = username;
+
     }
 
+
+    public String getmUserName() {
+        return mUserName;
+    }
+
+    public void setmUserName(String mUserName) {
+        this.mUserName = mUserName;
+    }
 
     public String getIp() {
         return ip;

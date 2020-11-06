@@ -1,18 +1,21 @@
 package com.example.sockettcpclient.tcpclient;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
-import com.example.sockettcpclient.activitys.BaseActivity;
-import com.example.sockettcpclient.adapter.Msg;
-import com.example.sockettcpclient.utils.Prompt;
+import androidx.annotation.NonNull;
 
-import java.io.BufferedReader;
+import com.example.sockettcpclient.base.BaseActivity;
+import com.example.sockettcpclient.adapter.Msg;
+import com.example.sockettcpclient.dao.InputDao;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * socket tcp 封装类
@@ -22,26 +25,48 @@ import java.net.Socket;
  */
 public class TcpClient extends BaseActivity {
     protected Socket socket;
-    protected Prompt mPrompt = new Prompt();
-    BufferedReader re = null;
-    ObjectInputStream ois = null;
-    Object socketMsg = null;
+    DataUpdateListener mListener;
+    List<Msg> msgList;
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                Msg content = (Msg) msg.obj;
+                if (mListener != null) {
+                    mListener.receiveData(content);
+                }
+            }
+        }
+    };
+
+    public void setmListener(DataUpdateListener mListener) {
+        this.mListener = mListener;
+    }
+
+    public interface DataUpdateListener {
+        void receiveData(Msg data);
+    }
 
     /**
      * 连接socket
      */
-    public void createSock(final String ServerIp, final int ServerPort) {
+    public void createSock(final String ServerIp, final int ServerPort, final List<Msg> msgList) {
+        this.msgList = msgList;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     InetAddress inetAddress = InetAddress.getByName(ServerIp);
-                    socket = new Socket(inetAddress, ServerPort);
+                    Log.d("ljr", "run: 开始连接");
+                    socket = new Socket( inetAddress,ServerPort);
+                    Log.d("ljr", "run: 连接成功111");
                     AcceptMsg();
-                    Log.e("提示", "run: 连接成功");
+                    Log.d("ljr", "run: 连接成功222");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("提示", "run: 连接失败" + e);
+                    Log.d("ljr", "run: 连接失败" + e);
                 }
             }
         }).start();
@@ -53,7 +78,7 @@ public class TcpClient extends BaseActivity {
      * @param msg 传入消息
      * @return 是否发送成功
      */
-    public boolean sendMsg(final String msg) {
+    public boolean sendMsg(final String msg, final String mIp, final String mUserName) {
         // isConnected():如果套接字已成功连接到服务器，则为true
         if (socket != null && socket.isConnected()) {
             // 说明已经连接成功
@@ -64,7 +89,10 @@ public class TcpClient extends BaseActivity {
                     public void run() {
                         try {
                             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-
+                            String changJson = ChangJson(1, mIp, "", mUserName, msg);
+                            oos.writeObject(changJson);
+                            oos.flush();
+                            Log.d("ljr", "发送的数据-->" + changJson);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -86,15 +114,19 @@ public class TcpClient extends BaseActivity {
                 @Override
                 public void run() {
                     try {
-                        ois = new ObjectInputStream(socket.getInputStream());
-                        while ((socketMsg = ois.readObject())!=null){
-                            String msg = (String) ois.readObject();
-                            Msg m;
-                            System.out.println(ois.readObject());
-                            System.out.println(msg);
-                            Log.e("接收:",msg);
+                        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                        while (true) {
+                            String accept = (String) ois.readObject();
+                            InputDao inputDao = FromJson(accept);
+                            // msg = inputDao.msg;
+                            Log.d("ljr", "接收到的数据--->" + accept);
+                            Log.d("ljr", "解析出来的数据--->" + inputDao.msg);
+                            Msg acceptMsg = new Msg(inputDao.msg, 0, inputDao.ip, inputDao.username);
+                            Message msg = new Message();
+                            msg.what = 1;
+                            msg.obj = acceptMsg;
+                            mHandler.sendMessage(msg);
                         }
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {

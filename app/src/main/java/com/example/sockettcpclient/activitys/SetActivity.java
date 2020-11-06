@@ -10,16 +10,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.sockettcpclient.R;
+import com.example.sockettcpclient.base.BaseActivity;
 import com.example.sockettcpclient.utils.Prompt;
 
 /**
- * 设置
+ * 设置类
  * author : Iwen大大怪
  * date   : 2020/10/2118:31
  */
 public class SetActivity extends BaseActivity {
+    String userName;
     String ip;
     String port;
+    TextView userShow;
     TextView ipshow;
     TextView portshow;
     EditText ipset;
@@ -40,15 +43,15 @@ public class SetActivity extends BaseActivity {
         back();
         read();
 
-        // 点击修改配置
+        // 点击修改配置 :Integer.parseInt(portset.getText().toString())
         mSetStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 先创建一个对象
+                String changConfig = ChangJson(1, ipset.getText().toString(), portset.getText().toString(), "","");
                 // 将配置写入手机中
-                SharedPreferences.Editor editor = getSharedPreferences("data", Context.MODE_PRIVATE).edit();
-                editor.putString("ip", ipset.getText().toString());
-                editor.putInt("port", Integer.parseInt(portset.getText().toString()));
-                editor.apply();
+                WriteObjInSp(changConfig);
+                // 再读取并显示
                 read();
                 mPrompt.setToast(SetActivity.this, "修改成功");
             }
@@ -58,11 +61,11 @@ public class SetActivity extends BaseActivity {
         mDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 先创建对象
+                String restoreConfig = ChangJson(1,"192.168.43.174","8080","iwen大大怪","");
                 // 恢复一个默认的数据写入手机
-                SharedPreferences.Editor editor = getSharedPreferences("data", Context.MODE_PRIVATE).edit();
-                editor.putString("port", "8080");
-                editor.putString("ip", "192.168.43.174");
-                editor.apply();
+                WriteObjInSp(restoreConfig);
+                // 再读取并显示
                 read();
                 mPrompt.setToast(SetActivity.this, "恢复成功");
             }
@@ -76,6 +79,8 @@ public class SetActivity extends BaseActivity {
         SharedPreferences preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
         ip = preferences.getString("ip", "192.168.43.174");
         port = preferences.getString("port", "8080");
+        userName = preferences.getString("username","iwen大大怪");
+        userShow.setText("当前指定用户名:" + userName);
         ipshow.setText("当前指定服务器IP:" + ip);
         portshow.setText("当前指定服务器PORT:" + port);
         ipset.setText(ip);
@@ -86,6 +91,7 @@ public class SetActivity extends BaseActivity {
      * 初始化控件
      */
     private void init() {
+        userShow = fd(R.id.show_user);
         ipshow = fd(R.id.show_ip);
         portshow = fd(R.id.show_port);
         ipset = fd(R.id.ip_set);

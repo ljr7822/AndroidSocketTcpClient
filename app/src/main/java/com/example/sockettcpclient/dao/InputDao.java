@@ -5,13 +5,13 @@ package com.example.sockettcpclient.dao;
  * date   : 2020/10/231:12
  */
 public class InputDao {
-    public String type; // 消息类型 3-连接
+    public Integer type; // 消息类型
     public String ip; // ip地址
     public String port; // 端口号
     public String username; // 用户名
     public String msg; // 消息
 
-    public InputDao(String type, String ip, String port, String username, String msg) {
+    public InputDao(Integer type, String ip, String port, String username, String msg) {
         this.type = type;
         this.ip = ip;
         this.port = port;
@@ -19,11 +19,11 @@ public class InputDao {
         this.msg = msg;
     }
 
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
